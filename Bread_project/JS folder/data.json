@@ -1,0 +1,29 @@
+{
+    "shopItems": [
+        {   "id": "item1",
+            "name": "bread1",
+            "image": "./Images/Rustic-Bread.jpg", 
+            "price": "1.00",
+            "info": "some info 1",
+            "flourType": ["Wheat", "Simplify"]
+        },
+
+        {
+            "id": "item2",
+            "name": "bread2",
+            "image": "./Images/homemade-sunflower-seed-bread-12.jpg",
+            "price": "2.00",
+            "info": "some info 2",
+            "flourType": ["Simplify", "Spelt"]
+        },
+
+        {
+            "id": "item3",
+            "name": "bread3",
+            "image": "./Images/Korb_mit_Brötchen.jpg",
+            "price": "3.00",
+            "info": "some info 3",
+            "flourType": ["Spelt" , "Grain"]
+                }
+    ]
+}
