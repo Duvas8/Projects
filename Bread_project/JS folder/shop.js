@@ -3,18 +3,54 @@ import React , {Component} from 'react'
 import Aux from '../../hoc/Aux'
 
 import ShopItems from './ShopItems/ShopItems';
+import data from '../../data.json'
+import Filter from './Filter/Filter';
 
 class shop extends Component {
-    state = {
-        shopItems: [
-            {id: 'item1', name: 'bread1', image: 'image1', price: '1.00₪', info: "some info 1", amount: 1},
-            {id: 'item2', name: 'bread2', image: 'image2', price: '2.00₪', info: "some info 2", amount: 0},
-            {id: 'item3', name: 'bread3', image: 'image3', price: '3.00₪', info: "some info 3", amount: 0}
-        ],
-        
-    };
     
-    consolLogtest = () => {console.log(this.state.shopItems[0].amount)}
+    constructor() {
+        super();
+        this.state = {
+            shopItems: data.shopItems,
+            sort: "",
+            type: ""
+         }
+        };
+
+    sortItems(event){
+        //impl
+        console.log(event.target.value)
+    };
+
+    filterItems = (event) =>{
+        //impl
+        
+        if(event.target.value === ""){
+            this.setState({type: event.target.value , shopItem: data.shopItems})
+            console.log(event.target.value)
+        }else{
+            this.setState({
+            type: event.target.value,
+            ShopItems: data.shopItems.filter(
+                (shopItem) => shopItem.flourType.indexOf(event.target.value) >= 0 
+            ),
+        })
+        }
+        
+    }
+
+    consolLogtest = (event , id) => {
+        const itemIndex = this.state.shopItems.findIndex(item => {
+            return item.id === id;
+          });
+          let itemAmount = this.state.shopItems[itemIndex].amount
+          this.setState((itemAmount) => {
+              return {
+                amount: this.state.shopItems[itemIndex].amount +  1
+              }
+          })
+        console.log(this.state.shopItems[itemIndex].amount)
+    };
 
     addItemHandler = (event, id) => {
         const itemIndex = this.state.shopItems.findIndex(item => {
@@ -61,10 +97,17 @@ class shop extends Component {
             shopItems = {this.state.shopItems}
             addItem = {this.consolLogtest}
             subItem = {this.subItemHandler}
-            
+            key={this.state.id}
             />
      return(
          <Aux>
+             <Filter count={this.state.shopItems.length}
+             type={this.state.type}
+             sort={this.state.sort}
+             sortItems={this.sortItems}
+             filterItems={this.filterItems}
+             
+             />
              {shopItems}
          </Aux>
        );    
