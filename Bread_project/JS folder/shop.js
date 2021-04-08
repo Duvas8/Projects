@@ -5,6 +5,7 @@ import Aux from '../../hoc/Aux'
 import ShopItems from './ShopItems/ShopItems';
 import data from '../../data.json'
 import Filter from './Filter/Filter';
+import Cart from './Cart/Cart';
 
 class shop extends Component {
     
@@ -12,10 +13,27 @@ class shop extends Component {
         super();
         this.state = {
             shopItems: data.shopItems,
+            cartItems: [],
             sort: "",
             type: ""
          }
         };
+
+    addToCart = (shopItem) => {
+        const cartItems = this.state.cartItems.slice();
+        let alredyInCart = false;
+        cartItems.forEach((x) => {
+            if(x.id === shopItem.id){
+                x.count++;
+                alredyInCart = true;
+            }
+        })
+        if(!alredyInCart){
+            cartItems.push({...shopItem, count: 1})
+        }
+        this.setState({cartItems})
+        console.log(cartItems);
+    };
 
     sortItems(event){
         //impl
@@ -37,66 +55,14 @@ class shop extends Component {
         })
         }
         
-    }
-
-    consolLogtest = (event , id) => {
-        const itemIndex = this.state.shopItems.findIndex(item => {
-            return item.id === id;
-          });
-          let itemAmount = this.state.shopItems[itemIndex].amount
-          this.setState((itemAmount) => {
-              return {
-                amount: this.state.shopItems[itemIndex].amount +  1
-              }
-          })
-        console.log(this.state.shopItems[itemIndex].amount)
     };
 
-    addItemHandler = (event, id) => {
-        const itemIndex = this.state.shopItems.findIndex(item => {
-            return item.id === id;
-          });
-        const shopItem = {
-            ...this.state.shopItems[itemIndex]
-        };
-        const shopItems =  [...this.state.shopItems];
-        shopItems[itemIndex] = shopItem;
-       
-
-        this.setState((prevState, props) => {
-            return {
-                shopItems: shopItems,
-                amount: prevState.amount + 1
-            };
-        });
-    };
-
-    subItemHandler = (event, id) => {
-        const itemIndex = this.state.shopItems.findIndex(item => {
-            return item.id === id;
-          });
-        const shopItem = {
-            ...this.state.shopItems[itemIndex]
-        };
-        const shopItems =  [...this.state.shopItems];
-        shopItems[itemIndex] = shopItem;
-
-        this.setState((prevState, props) => {
-           if(this.state.shopItems.amount != 0) {
-               return {
-                shopItems: shopItems,
-                amount: prevState.amount - 1
-            };
-          };
-        })
-    };
 
     render() {
         const shopItems = 
             <ShopItems
             shopItems = {this.state.shopItems}
-            addItem = {this.consolLogtest}
-            subItem = {this.subItemHandler}
+            addToCart = {this.addToCart}
             key={this.state.id}
             />
      return(
@@ -109,6 +75,7 @@ class shop extends Component {
              
              />
              {shopItems}
+             <Cart cartItems={this.state.cartItems} />
          </Aux>
        );    
       }
