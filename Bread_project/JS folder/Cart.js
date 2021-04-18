@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import './cart.css'
 
+import formatCurrency from '../../../util'
+import ShopItems from '../ShopItems/ShopItems';
+
 
 export default class Cart extends Component {
     render() {
@@ -19,17 +22,24 @@ export default class Cart extends Component {
                 <div> 
                     <div className="cart">
                         <ul className="cart_items">
-                            {cartItems.map(item => (
+                            {cartItems.map((item , index ) => (
                                 <li key={cartItems.id}>
                                     <div className="cart_image">
                                         <img src={item.image} alt={item.name}></img>
-                                    </div>
-                                    <div>
-                                        <div>{item.name}</div>
-                                        <button onClick={() => this.props.removeFromCart(item)}>
+                                    </div> 
+                                    <div className = "cartInfo">
+                                            {item.name}
+                                            {item.info}
+                                            </div>
+                                    <div className="cart_mengment">
+                                       
+                                        {formatCurrency(item.price)}
+                                        <button onClick={() => this.props.addAmount(item)} className  = "Btn" > + </button>
+                                        <button onClick={() => this.props.subAmount(item, index)} className  = "Btn" > - </button>
+                                        <div className = "ItemCounte"> {item.count}</div>
+                                        <button onClick={() => this.props.removeFromCart(index)}>
                                             Remove
                                         </button>
-
                                     </div>
                                 </li>
                             ))}
@@ -37,6 +47,22 @@ export default class Cart extends Component {
                         </ul>
                     </div>
                 </div>
+                {cartItems.length !== 0 && (
+             <div className="cart">
+                    <div className="total">
+                        <div >
+                            TOTAL{"   "}
+                            {formatCurrency(
+                                cartItems.reduce((a, c) => a + c.price * c.count, 0)
+                            )}
+                        </div>
+                        <button className="proceed_Btn"> 
+                            Proceed
+                        </button>
+                 </div> 
+             </div>
+             )}
+                   
                
             </div>
         )
