@@ -19,6 +19,17 @@ class shop extends Component {
          }
         };
 
+
+       
+
+
+    removeFromCart = (index) => {
+        const cartItems = [...this.state.cartItems];
+        cartItems.splice(index, 1);
+        this.setState({cartItems:cartItems});
+        }
+   
+
     addToCart = (shopItem) => {
         const cartItems = this.state.cartItems.slice();
         let alredyInCart = false;
@@ -34,6 +45,35 @@ class shop extends Component {
         this.setState({cartItems})
         console.log(cartItems);
     };
+    
+    addAmount = (shopItem) => {
+            const cartItems = this.state.cartItems;
+            cartItems.forEach((x) => {
+                if(x.id === shopItem.id){
+                    x.count++
+                }  
+            })
+            this.setState({cartItems})
+        }
+
+        subAmount = (shopItem, index) => {
+            const cartItems = [...this.state.cartItems];
+            cartItems.forEach((x) => {
+                if(x.id === shopItem.id){
+                    if(x.count === 1){
+                   cartItems.splice(index, 1);
+                   this.setState({cartItems:cartItems});
+            }else{
+                x.count-- 
+            }
+                   
+                } 
+                
+            }) 
+            
+            
+            this.setState({cartItems})
+        }
 
     sortItems(event){
         //impl
@@ -57,12 +97,15 @@ class shop extends Component {
         
     };
 
+    
+
 
     render() {
         const shopItems = 
             <ShopItems
             shopItems = {this.state.shopItems}
             addToCart = {this.addToCart}
+           
             key={this.state.id}
             />
      return(
@@ -75,10 +118,28 @@ class shop extends Component {
              
              />
              {shopItems}
-             <Cart cartItems={this.state.cartItems} />
+             <Cart 
+             cartItems={this.state.cartItems} 
+             removeFromCart={this.removeFromCart} 
+             addAmount = {this.addAmount}
+             subAmount = {this.subAmount}
+             />
          </Aux>
        );    
       }
     };
     
 export default shop;
+
+
+
+
+/* THIS IS FROM THE VIDEO  AND IWASNT ABLE TO IMPLEMENT IT
+
+removeFromCart = (shopItem) => {
+        const cartItems = this.state.cartItems.slice();
+        this.setState({
+            cartItems:cartItems.filter((x) => x.id !== shopItem.id)
+        })
+        
+        } */
