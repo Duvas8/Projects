@@ -2,11 +2,26 @@ import React, { Component } from 'react';
 import './cart.css'
 
 import formatCurrency from '../../../util'
-import ShopItems from '../ShopItems/ShopItems';
 
+import Checkout from '../Checkout/Checkout'
 
 export default class Cart extends Component {
+    
+    constructor(props){
+            super(props);
+            this.state = {
+                name:"",
+                showCheckout: false
+            };
+            
+        }
+
+        handleInput = (e) => {
+            this.setState({[e.target.name]: e.target.value});
+        }
+
     render() {
+       
         const {cartItems} = this.props;
         return (
             <div className="cart_container">
@@ -56,14 +71,20 @@ export default class Cart extends Component {
                                 cartItems.reduce((a, c) => a + c.price * c.count, 0)
                             )}
                         </div>
-                        <button className="proceed_Btn"> 
+                        <button className="proceed_Btn" onClick={() => {
+                            this.setState({showCheckout:!this.state.showCheckout});
+                            }}> 
                             Proceed
                         </button>
                  </div> 
              </div>
-             )}
-                   
-               
+             )} 
+               {this.state.showCheckout && (
+                   <Checkout 
+                   cartItems = {localStorage.getItem("cartItems")}
+                   handleInput = {this.handleInput}>
+                   </Checkout>
+               )}
             </div>
         )
     }
