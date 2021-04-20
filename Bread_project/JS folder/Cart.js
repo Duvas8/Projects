@@ -3,22 +3,10 @@ import './cart.css'
 
 import formatCurrency from '../../../util'
 
-import Checkout from '../Checkout/Checkout'
+
 
 export default class Cart extends Component {
     
-    constructor(props){
-            super(props);
-            this.state = {
-                name:"",
-                showCheckout: false
-            };
-            
-        }
-
-        handleInput = (e) => {
-            this.setState({[e.target.name]: e.target.value});
-        }
 
     render() {
        
@@ -72,19 +60,13 @@ export default class Cart extends Component {
                             )}
                         </div>
                         <button className="proceed_Btn" onClick={() => {
-                            this.setState({showCheckout:!this.state.showCheckout});
+                            this.props.showCheckout();
                             }}> 
                             Proceed
                         </button>
                  </div> 
              </div>
              )} 
-               {this.state.showCheckout && (
-                   <Checkout 
-                   cartItems = {localStorage.getItem("cartItems")}
-                   handleInput = {this.handleInput}>
-                   </Checkout>
-               )}
             </div>
         )
     }
