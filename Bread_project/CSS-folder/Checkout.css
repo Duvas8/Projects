@@ -1,0 +1,96 @@
+.checkout_container{
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    width: 30%;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    background-color: white;
+    border: 1px solid burlywood;
+    border-radius: 4px;
+    box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.7) ;
+}
+
+.checkout_items_container{
+    display: flex;
+    width: 90%;
+    flex-direction: column;
+    justify-content: center;
+    align-self: flex-start;
+    margin: 5% 0% 0% 5%;
+    border-bottom: 3px solid rgb(207, 150, 76);
+}
+
+.checkout_items li{ 
+    display: flex;
+    margin: 0% 0% 0% 5%;
+    justify-content:space-between;
+}
+
+.checkout_items_info{
+    display: flex;
+    margin: 5% 0% 0% 0%;
+    height: auto;
+    justify-content:space-between;
+    border-bottom: 3px solid rgb(207, 150, 76);
+}
+.checkout_total{
+    padding: 0;
+    margin: 2% 0% 0% 0%;
+}
+
+.form_container{
+    font-size: 1.2rem;
+    list-style-type: none;
+    margin-top: 5%;
+}
+
+.form_container input {
+    width: 75%;
+    padding: 8px;
+    margin-bottom: 5%;
+    border: none;
+    border-bottom: 3px solid burlywood;
+    transition: border-bottom 0.2s linear;
+    transition: background-color 0.2s linear;
+}
+.form_container select {
+    width: 30%;
+    padding: 8px;
+    margin-bottom: 5%;
+    border: none;
+    border-bottom: 3px solid burlywood;
+    transition: border-bottom 0.2s linear;
+    transition: background-color 0.2s linear;
+}
+
+.form_container input:focus {
+    outline: none;
+    background-color: wheat;
+    border-bottom: 3px solid rgb(190, 124, 36);
+}
+.form_container select:focus {
+    outline: none;
+    background-color: wheat;
+    border-bottom: 3px solid rgb(190, 124, 36);
+}
+
+.checkout_btn_container{
+    
+    display: flex;
+    margin: 5% 5% 5% 10%;
+    height: auto;
+    justify-content:space-between;
+}
+
+.checkout_btn{
+    justify-content: center;
+    margin: 5% ;
+    font-weight: bold;
+    border: 1px solid white;
+    color: white;
+    background-color: burlywood;
+    padding: 12px 36px;
+}
