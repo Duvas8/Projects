@@ -6,6 +6,7 @@ import ShopItems from './ShopItems/ShopItems';
 import data from '../../data.json'
 import Filter from './Filter/Filter';
 import Cart from './Cart/Cart';
+import Checkout from '../Shop/Checkout/Checkout'
 
 class shop extends Component {
     
@@ -13,21 +14,34 @@ class shop extends Component {
         super();
         this.state = {
             shopItems: data.shopItems,
-            cartItems: [],
+            cartItems: localStorage.getItem("cartItems")? JSON.parse(localStorage.getItem("cartItems")):[],
             sort: "",
-            type: ""
+            type: "",
+            showCheckout:false,
+            name: "",
+            phoneNumber:"",
+            peckupPoint:""
          }
         };
 
+    
 
-       
+    createOrder = (order) => {
+        alert("Need to save order for" + order.name)
+        };
+    
 
+    showCheckout = () => {
+        this.setState({showCheckout:!this.state.showCheckout});
+        console.log(this.state.showCheckout);
+    }
 
     removeFromCart = (index) => {
         const cartItems = [...this.state.cartItems];
         cartItems.splice(index, 1);
         this.setState({cartItems:cartItems});
-        }
+        localStorage.setItem("cartItems", JSON.stringify(cartItems)); //mybe i will need too add this.state before the cartItems
+        };
    
 
     addToCart = (shopItem) => {
@@ -44,6 +58,7 @@ class shop extends Component {
         }
         this.setState({cartItems})
         console.log(cartItems);
+        localStorage.setItem("cartItems", JSON.stringify(cartItems));
     };
     
     addAmount = (shopItem) => {
@@ -54,7 +69,7 @@ class shop extends Component {
                 }  
             })
             this.setState({cartItems})
-        }
+        };
 
         subAmount = (shopItem, index) => {
             const cartItems = [...this.state.cartItems];
@@ -63,6 +78,7 @@ class shop extends Component {
                     if(x.count === 1){
                    cartItems.splice(index, 1);
                    this.setState({cartItems:cartItems});
+                   localStorage.setItem("cartItems", JSON.stringify(cartItems));
             }else{
                 x.count-- 
             }
@@ -73,7 +89,7 @@ class shop extends Component {
             
             
             this.setState({cartItems})
-        }
+        };
 
     sortItems(event){
         //impl
@@ -123,7 +139,16 @@ class shop extends Component {
              removeFromCart={this.removeFromCart} 
              addAmount = {this.addAmount}
              subAmount = {this.subAmount}
+             showCheckout = {this.showCheckout}
              />
+            {this.state.showCheckout && (
+               <Checkout 
+               cartItems={this.state.cartItems}
+               //handleInput = {this.handleInput} 
+               showCheckout = {this.showCheckout}
+               createOrder = {this.createOrder}
+               />
+               )}
          </Aux>
        );    
       }
