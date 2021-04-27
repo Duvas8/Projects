@@ -1,0 +1,1 @@
+export const FETCH_SHOPITEMS  = "FETCH_SHOPITEMS"
