@@ -1,12 +1,15 @@
 import React , {Component} from 'react'
 
-import Aux from '../../hoc/Aux'
+import Aux from '../../hoc/Aux.js'
 
-import ShopItems from './ShopItems/ShopItems';
+import ShopItems from './ShopItems/ShopItems.js';
 import data from '../../data.json'
 import Filter from './Filter/Filter';
 import Cart from './Cart/Cart';
 import Checkout from '../Shop/Checkout/Checkout'
+import store from '../../reduxStore';
+import { Provider } from 'react-redux';
+
 
 class shop extends Component {
     
@@ -117,6 +120,7 @@ class shop extends Component {
 
 
     render() {
+       
         const shopItems = 
             <ShopItems
             shopItems = {this.state.shopItems}
@@ -124,7 +128,8 @@ class shop extends Component {
            
             key={this.state.id}
             />
-     return(
+     return( 
+    <Provider store={store}>
          <Aux>
              <Filter count={this.state.shopItems.length}
              type={this.state.type}
@@ -141,7 +146,7 @@ class shop extends Component {
              subAmount = {this.subAmount}
              showCheckout = {this.showCheckout}
              />
-            {this.state.showCheckout && (
+            {this.state.showCheckout && ( 
                <Checkout 
                cartItems={this.state.cartItems}
                //handleInput = {this.handleInput} 
@@ -150,6 +155,7 @@ class shop extends Component {
                />
                )}
          </Aux>
+    </Provider>
        );    
       }
     };
