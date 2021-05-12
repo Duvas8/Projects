@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './cart.css'
 
 import formatCurrency from '../../../util'
+import { Fade } from "react-awesome-reveal";
 
 
 
@@ -12,7 +13,13 @@ export default class Cart extends Component {
        
         const {cartItems} = this.props;
         return (
+            
             <div className="cart_container">
+                <div className="cart_Icon" onClick={() => {
+                    this.props.openCart();
+                    }}>
+                        <img alt='cart-icon' src='./Images/icons8-shopping-bag-32.png'></img>
+                 </div>  
                 {cartItems.length === 0 ? (
                  <div className="cart cart_header"> 
                 Cart Is Empty
@@ -24,9 +31,10 @@ export default class Cart extends Component {
                 )}
                 <div> 
                     <div className="cart">
+                        <Fade direction="up" triggerOnce cascade duration="750">
                         <ul className="cart_items">
                             {cartItems.map((item , index ) => (
-                                <li key={cartItems.id}>
+                                <li key={index}>
                                     <div className="cart_image">
                                         <img src={item.image} alt={item.name}></img>
                                     </div> 
@@ -48,6 +56,7 @@ export default class Cart extends Component {
                             ))}
 
                         </ul>
+                        </Fade>
                     </div>
                 </div>
                 {cartItems.length !== 0 && (
