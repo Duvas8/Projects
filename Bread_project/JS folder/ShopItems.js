@@ -36,12 +36,17 @@ render() {
 
     return (
     <Axu>
+        <div className={classes.cart_Icon} onClick={() => {
+            this.props.openCart();
+        }}>
+            <img alt='cart-icon' src='./Images/icons8-shopping-cart-32.png'></img>
+        </div>
     <Fade direction='up' triggerOnce cascade duration="750">
         { !this.props.ShopItems ? (
         <div>Loading...</div>
         ) : (
         <ul className={classes.shopItem_container}>
-            { this.props.shopItems.map((shopItem) => (
+            { this.props.shopItems.map((shopItem ) => (
                 <li key={shopItem.id}>
                     <div  className = {classes.ShopItem}>
                         <div className = {classes.Image}>
@@ -50,8 +55,21 @@ render() {
                             <img src = {shopItem.image} alt="bread_image" ></img>
                             </a>
                         </div>
+                        <div className={classes.productInfo_Container}>
+                            <div> LOGO </div>
+                            <div className={classes.productInfo}>
                             <h2>{shopItem.name}</h2>
-                            <p className = {classes.info} >{shopItem.info}</p>
+                                <p>{shopItem.info}</p>
+                            </div>
+                            <div >
+                                <p> Phone Number</p>
+                                <div className={classes.flourType_Container} >
+                                    {shopItem.flourType.map((x)=>(  
+                                    <div>{" "}{x}</div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                             <p className = {classes.price} >{formatCurrency(shopItem.price)}</p>
                             <div className = {classes.amountControlContainer}>
                                 <button onClick={() => this.props.addToCart(shopItem)} className  = {classes.Btn} > Add To Cart</button>
@@ -69,26 +87,40 @@ render() {
         onRequestClose={this.closeModal}>
             <Zoom>
                 <div>
-                    <button className={classes.close_btn} onClick={() => {this.closeModal()}}>
+                
+                    <div className={classes.close_btn} onClick={() => {this.closeModal()}}>
+                        <Zoom delay="100">
                         <div className={classes.close_btn_bar1}></div>
                         <div className={classes.close_btn_bar2}></div>
-                    </button>
+                        </Zoom>
+                    </div>
+                    
                     <div className={classes.ShopItem_details}>
                     <a herf = {"#" + shopItem.id} className={classes.Image_modal_container}>
                     <img src = {shopItem.image} alt="bread_image" className={classes.Image_modal} ></img>
                     </a>
                     <div className={classes.ShopItem_details_discription}>
-                        <h1>{shopItem.name}</h1>
-                            <p className = {classes.info_modal} >{shopItem.info}</p>
-                            <p className = {classes.price_modal} >{formatCurrency(shopItem.price)}</p>
-
-                                <button onClick={() => {this.props.addToCart(shopItem);
-                                     this.closeModal()}} 
-                                     className  = {classes.Btn_modal} >
-                                          Add To Cart
-                                    </button>
+                    <div className={classes.productInfo_Container}>
+                            <div> LOGO </div>
+                            <div className={classes.productInfo}>
+                            <h2>{shopItem.name}</h2>
+                                <p>{shopItem.info}</p>
+                            </div>
+                            <div >
+                                <p> Phone Number</p>
+                                <div className={classes.flourType_Container} >
+                                    {shopItem.flourType.map((x)=>(  
+                                    <div>{" "}{x}</div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
-                    
+                            
+                        </div>
+                        <p className = {classes.price_modal} >{formatCurrency(shopItem.price)}</p>
+                            <div className = {classes.amountControlContainer}>
+                                <button onClick={() => this.props.addToCart(shopItem)} className  = {classes.Btn} > Add To Cart</button>
+                            </div>
                      </div>
                 </div>
             </Zoom>
@@ -125,3 +157,7 @@ export default connect((state) => ({ShopItems: state.ShopItems.items}),
 }<div className = {classes.ShopItem_containr}> </div>
 
     /* */
+
+
+    // <h2>{shopItem.name}</h2>
+   // <p className = {classes.info} >{shopItem.info}</p>
