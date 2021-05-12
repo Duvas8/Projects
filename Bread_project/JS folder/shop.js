@@ -20,10 +20,11 @@ class shop extends Component {
             cartItems: localStorage.getItem("cartItems")? JSON.parse(localStorage.getItem("cartItems")):[],
             sort: "",
             type: "",
-            showCheckout:false,
             name: "",
             phoneNumber:"",
-            peckupPoint:""
+            peckupPoint:"",
+            showCheckout:false,
+            openCartStatus:false,
          }
         };
 
@@ -33,12 +34,17 @@ class shop extends Component {
         alert("Need to save order for" + order.name)
         };
     
-
+// show checkout when the user click on the "procide button"
     showCheckout = () => {
         this.setState({showCheckout:!this.state.showCheckout});
-        console.log(this.state.showCheckout);
+        
     }
-
+// make the cart component visable
+    openCart = () => {
+        this.setState({openCartStatus:!this.state.openCartStatus})
+        console.log();
+    }
+    
     removeFromCart = (index) => {
         const cartItems = [...this.state.cartItems];
         cartItems.splice(index, 1);
@@ -121,39 +127,45 @@ class shop extends Component {
 
     render() {
        
-        const shopItems = 
-            <ShopItems
-            shopItems = {this.state.shopItems}
-            addToCart = {this.addToCart}
            
-            key={this.state.id}
-            />
      return( 
     <Provider store={store}>
          <Aux>
-             <Filter count={this.state.shopItems.length}
+             {!this.state.openCartStatus ? ( <div>
+                  <Filter count={this.state.shopItems.length}
              type={this.state.type}
              sort={this.state.sort}
              sortItems={this.sortItems}
              filterItems={this.filterItems}
-             
+
              />
-             {shopItems}
-             <Cart 
+              <ShopItems
+            shopItems = {this.state.shopItems}
+            addToCart = {this.addToCart}
+            openCart = {this.openCart}
+            /> 
+            </div>
+            ) : ( <div> <Cart 
              cartItems={this.state.cartItems} 
              removeFromCart={this.removeFromCart} 
              addAmount = {this.addAmount}
              subAmount = {this.subAmount}
              showCheckout = {this.showCheckout}
+             openCart = {this.openCart}
              />
+             </div>
+             )}
             {this.state.showCheckout && ( 
                <Checkout 
                cartItems={this.state.cartItems}
-               //handleInput = {this.handleInput} 
                showCheckout = {this.showCheckout}
                createOrder = {this.createOrder}
                />
                )}
+             
+               
+             
+            
          </Aux>
     </Provider>
        );    
