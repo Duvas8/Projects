@@ -1,25 +1,43 @@
-import React, { Component } from 'react';
+import React, { useRef } from 'react';
 import './cart.css'
+import { useIntersection } from 'react-use';
 
 import formatCurrency from '../../../util'
 import { Fade } from "react-awesome-reveal";
 
 
 
-export default class Cart extends Component {
+export default function Cart (props) {
+     
     
+        
+        const sectionRef = useRef(null);
 
-    render() {
-       
-        const {cartItems} = this.props;
+        
+
+        const intersection = useIntersection(sectionRef, {
+            root: null,
+            rootMargin: "80%",
+            threshold: 0.1,
+        });
+
+
+        
+        
+         
+        const { cartItems } = props;
         return (
-            
-            <div className="cart_container">
-                <div className="cart_Icon" onClick={() => {
-                    this.props.openCart();
+            <div className="container" >
+                <div className="cart_container" ref={sectionRef}>
+                 <div className="cart_icon_container">
+                     <div  className={intersection && intersection.intersectionRatio < 0.8? "cart_Icon" : "cart_Icon_Btn"} onClick={() => {
+                    props.openCart();
                     }}>
-                        <img alt='cart-icon' src='./Images/icons8-shopping-bag-32.png'></img>
-                 </div>  
+                        <img alt='cart-icon' src='./Images/icons8-shopping-bag-32.png' ></img>
+                 </div>
+                
+              </div> 
+               
                 {cartItems.length === 0 ? (
                  <div className="cart cart_header"> 
                 Cart Is Empty
@@ -38,17 +56,35 @@ export default class Cart extends Component {
                                     <div className="cart_image">
                                         <img src={item.image} alt={item.name}></img>
                                     </div> 
-                                    <div className = "cartInfo">
-                                            {item.name}
-                                            {item.info}
-                                            </div>
+                <div className="ShopItem_details_discription">
+                    <div className="productInfo_Container">
+                            <div> LOGO </div>
+                            <div className="productInfo">
+                            <h2>{item.name}</h2>
+                                <p>{item.info}</p>
+                            </div>
+                            <div >
+                                <p> Phone Number</p>
+                                <div className="flourType_Container" >
+                                    {item.flourType.map((x)=>(  
+                                    <div>{" "}{x}</div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                            
+                        </div>
                                     <div className="cart_mengment">
-                                       
+                                      
                                         {formatCurrency(item.price)}
-                                        <button onClick={() => this.props.addAmount(item)} className  = "Btn" > + </button>
-                                        <button onClick={() => this.props.subAmount(item, index)} className  = "Btn" > - </button>
-                                        <div className = "ItemCounte"> {item.count}</div>
-                                        <button onClick={() => this.props.removeFromCart(index)}>
+                                       
+                                        <div className="btn_containar">
+                                            
+                                            <button onClick={() => props.addAmount(item)} className  = "Btn" > + </button>
+                                            <div className = "ItemCounte"> {item.count}</div>
+                                            <button onClick={() => props.subAmount(item, index)} className  = "Btn" > - </button>
+                                        </div>
+                                        <button className="cart_item_remove" onClick={() => props.removeFromCart(index)}>
                                             Remove
                                         </button>
                                     </div>
@@ -69,7 +105,7 @@ export default class Cart extends Component {
                             )}
                         </div>
                         <button className="proceed_Btn" onClick={() => {
-                            this.props.showCheckout();
+                            props.showCheckout();
                             }}> 
                             Proceed
                         </button>
@@ -77,6 +113,30 @@ export default class Cart extends Component {
              </div>
              )} 
             </div>
+            </div>
+            
         )
     }
-}
+
+    
+
+    //render() {
+
+        /*const element = document.querySelector(".cart_Icon")
+
+        const addCartBtn = element => {
+            element.classList.add("cart_Icon_Btn")
+            console.log("work add")
+        }
+        const removeCartBtn = element => {
+            element.classList.remove("cart_Icon_Btn")
+            console.log("work r")
+        }
+
+         if (intersection && intersection.intersectionRatio < 0.2) {
+             addCartBtn() 
+            } else {
+            removeCartBtn()
+         }*/
+          
+
