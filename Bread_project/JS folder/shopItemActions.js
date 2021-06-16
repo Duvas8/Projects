@@ -1,4 +1,5 @@
 import { FETCH_SHOPITEMS } from "../types"
+import { FILTER_SHOPITEMS_BY_FLOUR_TYPE} from  "../types"
 
 export const fetchShopItems = () => async (dispatch) => {
     const res = await fetch("/api/shopitems");
@@ -9,3 +10,18 @@ export const fetchShopItems = () => async (dispatch) => {
         payload: data
     });
 }
+
+export const filterShopItems = (shopItems , type) => (dispatch) => {
+    dispatch({
+        type: FILTER_SHOPITEMS_BY_FLOUR_TYPE,
+        payload: {
+            type: type,
+                items: 
+                type === "" 
+                ? shopItems
+                : shopItems.filter((x) => x.flourType.indsexOf(type) >= 0),
+        },
+    });
+};
+
+
