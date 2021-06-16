@@ -44,15 +44,20 @@ class shop extends Component {
         this.setState({openCartStatus:!this.state.openCartStatus})
         console.log();
     }
-    
-    removeFromCart = (index) => {
+// function that Remove item from cart    
+    removeFromCart = (index) => { 
+        //take the index of the item as a parameter
         const cartItems = [...this.state.cartItems];
+        // spred the array so react could save the state with out Chaingin it 
         cartItems.splice(index, 1);
+        // uses splice to Remove the item with the index that was given
         this.setState({cartItems:cartItems});
-        localStorage.setItem("cartItems", JSON.stringify(cartItems)); //mybe i will need too add this.state before the cartItems
+        // now react can marge the state and Update  the state
+        localStorage.setItem("cartItems", JSON.stringify(cartItems)); 
+        // save the new deta of the state cart item to the local storage of the brwoser
         };
    
-
+//
     addToCart = (shopItem) => {
         const cartItems = this.state.cartItems.slice();
         let alredyInCart = false;
@@ -100,24 +105,42 @@ class shop extends Component {
             this.setState({cartItems})
         };
 
-    sortItems(event){
+    sortItems = (event) => {
         //impl
         console.log(event.target.value)
+        const sort = event.target.value;
+        this.setState((state) => ({
+            sort: sort,
+            shopItems: this.state.shopItems.slice().sort((a,b) => 
+            sort ==="Lowest"
+            ? a.price > b.price 
+                ? 1 
+                : -1
+            : sort === "Highest"
+            ? a.price < b.price
+                ? 1
+                : -1
+            : a._id > b._id
+                ? 1
+                : -1
+            ),
+        })
+        )
     };
 
-    filterItems = (event) =>{
+    filterItems = (event) => {
         //impl
-        
+        console.log(event.target.value)
         if(event.target.value === ""){
             this.setState({type: event.target.value , shopItem: data.shopItems})
             console.log(event.target.value)
         }else{
             this.setState({
             type: event.target.value,
-            ShopItems: data.shopItems.filter(
+            shopItems: data.shopItems.filter(
                 (shopItem) => shopItem.flourType.indexOf(event.target.value) >= 0 
             ),
-        })
+        });
         }
         
     };
@@ -135,8 +158,8 @@ class shop extends Component {
                   <Filter count={this.state.shopItems.length}
              type={this.state.type}
              sort={this.state.sort}
-             sortItems={this.sortItems}
              filterItems={this.filterItems}
+             sortItems={this.sortItems}
 
              />
               <ShopItems
