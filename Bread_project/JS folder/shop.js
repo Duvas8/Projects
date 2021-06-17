@@ -19,7 +19,7 @@ class shop extends Component {
             shopItems: data.shopItems,
             cartItems: localStorage.getItem("cartItems")? JSON.parse(localStorage.getItem("cartItems")):[],
             sort: "",
-            type: "",
+            typeOfFlour: "",
             name: "",
             phoneNumber:"",
             peckupPoint:"",
@@ -62,7 +62,7 @@ class shop extends Component {
         const cartItems = this.state.cartItems.slice();
         let alredyInCart = false;
         cartItems.forEach((x) => {
-            if(x.id === shopItem.id){
+            if(x._id === shopItem._id){
                 x.count++;
                 alredyInCart = true;
             }
@@ -78,7 +78,7 @@ class shop extends Component {
     addAmount = (shopItem) => {
             const cartItems = this.state.cartItems;
             cartItems.forEach((x) => {
-                if(x.id === shopItem.id){
+                if(x._id === shopItem._id){
                     x.count++
                 }  
             })
@@ -88,7 +88,7 @@ class shop extends Component {
         subAmount = (shopItem, index) => {
             const cartItems = [...this.state.cartItems];
             cartItems.forEach((x) => {
-                if(x.id === shopItem.id){
+                if(x._id === shopItem._id){
                     if(x.count === 1){
                    cartItems.splice(index, 1);
                    this.setState({cartItems:cartItems});
@@ -132,11 +132,11 @@ class shop extends Component {
         //impl
         console.log(event.target.value)
         if(event.target.value === ""){
-            this.setState({type: event.target.value , shopItem: data.shopItems})
+            this.setState({typeOfFlour: event.target.value , shopItem: data.shopItems})
             console.log(event.target.value)
         }else{
             this.setState({
-            type: event.target.value,
+            tytypeOfFlourpe: event.target.value,
             shopItems: data.shopItems.filter(
                 (shopItem) => shopItem.flourType.indexOf(event.target.value) >= 0 
             ),
