@@ -32,9 +32,8 @@ function ShopItems (props){
         setItem({shopItem: null})
     }
     
-
     // creates to shop item for the modal in the react render
-    const { shopItem } = item;
+    const { ShopItems } = item;
 
     return (
     <Axu>
@@ -48,33 +47,33 @@ function ShopItems (props){
         <div className={classes.loading}>Loading...</div>
         ) : (
         <ul className={classes.shopItem_container}>
-            { props.shopItems.map((shopItem , index ) => (
+            { props.ShopItems.map((ShopItems , index ) => (
                 <li key={index}>
                     <div  className = {classes.ShopItem}>
                         <div className = {classes.Image}>
-                            <a herf = {"#" + shopItem.id} 
-                            onClick={() => {openModal(shopItem)}}>
-                            <img src = {shopItem.image} alt="bread_image" ></img>
+                            <a herf = {"#" + ShopItems._id} 
+                            onClick={() => {openModal(ShopItems)}}>
+                            <img src = {ShopItems.image} alt="bread_image" ></img>
                             </a>
                         </div>
                         <div className={classes.productInfo_Container}>
                             <div> LOGO </div>
                             <div className={classes.productInfo}>
-                            <h2>{shopItem.name}</h2>
-                                <p>{shopItem.info}</p>
+                            <h2>{ShopItems.name}</h2>
+                                <p>{ShopItems.info}</p>
                             </div>
                             <div >
                                 <p> Phone Number</p>
                                 <div className={classes.flourType_Container} >
-                                    {shopItem.flourType.map((x)=>(  
+                                    {ShopItems.flourType.map((x)=>(  
                                     <div>{" "}{x}</div>
                                     ))}
                                 </div>
                             </div>
                         </div>
-                            <p className = {classes.price} >{formatCurrency(shopItem.price)}</p>
+                            <p className = {classes.price} >{formatCurrency(ShopItems.price)}</p>
                             <div className = {classes.amountControlContainer}>
-                                <button onClick={() => props.addToCart(shopItem)} className  = {classes.Btn} > Add To Cart</button>
+                                <button onClick={() => props.addToCart(ShopItems)} className  = {classes.Btn} > Add To Cart</button>
                             </div>
                     </div>
                     </li>
@@ -84,7 +83,7 @@ function ShopItems (props){
     )}
      
   </Fade>
-   {shopItem && (
+   {ShopItems && (
         <Modal isOpen={true}
         onRequestClose={closeModal()}>
             <Zoom>
@@ -98,20 +97,20 @@ function ShopItems (props){
                     </div>
                     
                     <div className={classes.ShopItem_details}>
-                    <a herf = {"#" + shopItem.id} className={classes.Image_modal_container}>
-                    <img src = {shopItem.image} alt="bread_image" className={classes.Image_modal} ></img>
+                    <a herf = {"#" + ShopItems._id} className={classes.Image_modal_container}>
+                    <img src = {ShopItems.image} alt="bread_image" className={classes.Image_modal} ></img>
                     </a>
                     <div className={classes.ShopItem_details_discription}>
                     <div className={classes.productInfo_Container}>
                             <div> LOGO </div>
                             <div className={classes.productInfo}>
-                            <h2>{shopItem.name}</h2>
-                                <p>{shopItem.info}</p>
+                            <h2>{ShopItems.name}</h2>
+                                <p>{ShopItems.info}</p>
                             </div>
                             <div >
                                 <p> Phone Number</p>
                                 <div className={classes.flourType_Container} >
-                                    {shopItem.flourType.map((x)=>(  
+                                    {ShopItems.flourType.map((x)=>(  
                                     <div>{" "}{x}</div>
                                     ))}
                                 </div>
@@ -119,9 +118,9 @@ function ShopItems (props){
                         </div>
                             
                         </div>
-                        <p className = {classes.price_modal} >{formatCurrency(shopItem.price)}</p>
+                        <p className = {classes.price_modal} >{formatCurrency(ShopItems.price)}</p>
                             <div className = {classes.amountControlContainer}>
-                                <button onClick={() => props.addToCart(shopItem)} className  = {classes.Btn} > Add To Cart</button>
+                                <button onClick={() => props.addToCart(ShopItems)} className  = {classes.Btn} > Add To Cart</button>
                             </div>
                      </div>
                 </div>
@@ -133,6 +132,34 @@ function ShopItems (props){
   
 };
 // export the shop items and conets the redux to the component
-export default connect((state) => ({ShopItems: state.ShopItems.items}), 
+export default connect(
+    (state) => ({ShopItems: state.ShopItems.filteredItems}), 
 {fetchShopItems})
 (ShopItems);
+
+
+     /* <button onClick={shopItem.addItem} className  = {classes.Btn} > + </button>
+                    <div className = {classes.ItemCounte}>  </div>
+                    <button onClick={shopItem.subItem} className  = {classes.Btn} > - </button> 
+                    
+                    .Btn { 
+    display: flex;
+    color: burlywood;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+    background-color: white;
+    border: none;
+    padding: 7%;
+    margin: 10%;
+    box-shadow:  1px 3px 6px darkgrey ;
+}<div className = {classes.ShopItem_containr}> </div>
+
+    /* */
+
+
+    // <h2>{shopItem.name}</h2>
+   // <p className = {classes.info} >{shopItem.info}</p>
