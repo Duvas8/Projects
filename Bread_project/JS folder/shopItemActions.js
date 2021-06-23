@@ -12,26 +12,27 @@ export const fetchShopItems = () => async (dispatch) => {
     });
 }
 
-export const filterShopItems = (shopItems , typeOfFlour) => (dispatch) => {
+export const filterShopItems = (ShopItems , typeOfFlour) => (dispatch) => {
     dispatch({
         type: FILTER_SHOPITEMS_BY_FLOUR_TYPE,
         payload: {
             typeOfFlour: typeOfFlour,
                 items: 
                 typeOfFlour === "" 
-                ? shopItems
-                : shopItems.filter((x) => x.flourType.indsexOf(typeOfFlour) >= 0),
+                    ? ShopItems
+                // צריך לנסות ליצור פעולה שתאפס שתשלח לא נמצא מוצר 
+                    : ShopItems.filter((x) => x.flourType.indexOf(typeOfFlour) >= 0),
         },
     });
 };
 
-export const sortShopItems = (filterdItems, sort) => (dispatch) => {
-    const sortedItems =  filterdItems.slice()
-    if( sort === ""){
+export const sortShopItems = (filteredItems, sort) => (dispatch) => {
+    const sortedItems =  filteredItems.slice()
+    if( sort === "latest"){
         sortedItems.sort((a, b)  => (a._id > b._id ? 1 : -1));
     } else { 
         sortedItems.sort((a ,b) => (
-            sort === "Lowest"
+            sort === "lowest"
             ? a.price > b.price 
                 ? 1 
                 : -1
