@@ -4,10 +4,23 @@
     align-items: center;
     padding: 1rem;
     margin: 1rem;
-    width: 100%;
+    width: 84vw;
     border-bottom: 3px solid rgb(207, 150, 76);
+    
 }
 
 .Filter div {
     flex: 1;
+    width: 90%;
+}
+
+.loading{
+    position: relative;
+    font-size: 20px;
+    margin-top:20px;
+    margin-left: 40%;
+    padding: 24px;
+    width: 100vw;
+
+    height: 50vw;
 }
