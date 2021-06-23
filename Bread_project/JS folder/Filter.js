@@ -1,23 +1,42 @@
 import React, { Component } from 'react'
-
+import { connect } from 'react-redux';
+import {  filterShopItems, sortShopItems } from '../../../actions/shopItemActions'
 import classes from '../Filter/Filter.module.css';
 
-export default class Filter extends Component {
+class Filter extends Component {
     render() {
-        return (
+        return !this.props.filteredItems? (
+            <div className={classes.loading}>Loading...</div>
+        ) :  (
             <div className={classes.Filter}>
-                <div className={classes.filterResult}>{this.props.count} Prodacts</div>
+                <div className={classes.filterResult}>{this.props.filteredItems.length} Prodacts</div>
                 <div className={classes.filterSort}>
                      Order{" "} 
-                <select value={this.props.sort} onChange={this.props.sortItems}>
-                <option value='Latest'>Latest</option>
-                <option value='Lowest'>Lowest To Highest</option>
-                <option value='Highest'>Highest To Lowest</option>
+                <select
+                 value={this.props.sort}
+                  onChange={(e) =>
+                     this.props.sortShopItems(
+                      this.props.filteredItems,
+                       e.target.value
+                      )
+                   }
+                 >
+                <option value='latest'>Latest</option>
+                <option value='lowest'>Lowest To Highest</option>
+                <option value='highest'>Highest To Lowest</option>
                     </select>
                     </div>
                 <div className='filterFlourType'> 
                 Flour Type{" "}
-                <select value={this.props.type} onChange={this.props.filterItems}>
+                <select
+                 value={this.props.typeOfFlour} 
+                    onChange={(e) =>
+                        this.props.filterShopItems(
+                           this.props.ShopItems,
+                             e.target.value
+                             )
+                           }
+                        >
                     <option value=''>ALL</option>
                     <option value='Wheat'>Wheat</option>
                     <option value='Simplify'>Simplify</option>
@@ -29,3 +48,14 @@ export default class Filter extends Component {
         )
     }
 }
+export default connect((state) => ({
+    typeOfFlour: state.ShopItems.typeOfFlour,
+    sort: state.ShopItems.sort,
+    ShopItems: state.ShopItems.items,
+    filteredItems: state.ShopItems.filteredItems
+}),
+   {
+    filterShopItems,
+    sortShopItems,
+   }
+)(Filter);
