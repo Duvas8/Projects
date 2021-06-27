@@ -4,10 +4,12 @@ import { useIntersection } from 'react-use';
 
 import formatCurrency from '../../../util'
 import { Fade } from "react-awesome-reveal";
+import { connect } from 'react-redux';
+import { removeFromCart } from '../../../actions/cartActions';
 
 
 
-export default function Cart (props) {
+ function Cart (props) {
      
     
         
@@ -18,19 +20,20 @@ export default function Cart (props) {
         const intersection = useIntersection(sectionRef, {
             root: null,
             rootMargin: "80%",
-            threshold: 0.1,
+            threshold: 0.8,
         });
 
 
         
         
+    
          
         const { cartItems } = props;
         return (
             <div className="container" >
                 <div className="cart_container" ref={sectionRef}>
                  <div className="cart_icon_container">
-                     <div  className={intersection && intersection.intersectionRatio < 0.8? "cart_Icon" : "cart_Icon_Btn"} onClick={() => {
+                     <div  className={intersection && intersection.intersectionRatio < 0.5 ? "cart_Icon" : "cart_Icon_Btn"} onClick={() => {
                     props.openCart();
                     }}>
                         <img alt='cart-icon' src='./Images/icons8-shopping-bag-32.png' ></img>
@@ -118,6 +121,11 @@ export default function Cart (props) {
         )
     }
 
+    export default connect((state) => ({
+        cartItems: state.cart.cartItems,
+        }),
+        removeFromCart
+    )(Cart);
     
 
     //render() {
