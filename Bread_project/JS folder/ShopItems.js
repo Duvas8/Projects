@@ -7,7 +7,8 @@ import { Fade } from "react-awesome-reveal";
 import Modal from 'react-modal'
 import { Zoom } from "react-awesome-reveal";
 import { connect} from 'react-redux';
-import { fetchShopItems } from '../../../actions/shopItemActions'
+import { fetchShopItems } from "../../../actions/shopItemActions";
+import { addToCart } from "../../../actions/cartActions";
 
 
 function ShopItems (props){
@@ -134,7 +135,10 @@ function ShopItems (props){
 // export the shop items and conets the redux to the component
 export default connect(
     (state) => ({ShopItems: state.ShopItems.filteredItems}), 
-{fetchShopItems})
+{
+    fetchShopItems,
+    addToCart,
+})
 (ShopItems);
 
 
