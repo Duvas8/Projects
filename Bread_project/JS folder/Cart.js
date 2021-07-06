@@ -5,29 +5,21 @@ import { useIntersection } from 'react-use';
 import formatCurrency from '../../../util'
 import { Fade } from "react-awesome-reveal";
 import { connect } from 'react-redux';
-import { removeFromCart } from '../../../actions/cartActions';
-
+import { removeFromCart, addAmount, subAmount } from '../../../actions/cartActions';
 
 
  function Cart (props) {
-     
-    
-        
+          
         const sectionRef = useRef(null);
-
-        
 
         const intersection = useIntersection(sectionRef, {
             root: null,
             rootMargin: "80%",
             threshold: 0.8,
         });
-
-
-        
-        
+  
     
-         
+
         const { cartItems } = props;
         return (
             <div className="container" >
@@ -37,10 +29,10 @@ import { removeFromCart } from '../../../actions/cartActions';
                     props.openCart();
                     }}>
                         <img alt='cart-icon' src='./Images/icons8-shopping-bag-32.png' ></img>
-                 </div>
-                
+                 </div> 
               </div> 
                
+
                 {cartItems.length === 0 ? (
                  <div className="cart cart_header"> 
                 Cart Is Empty
@@ -78,16 +70,13 @@ import { removeFromCart } from '../../../actions/cartActions';
                             
                         </div>
                                     <div className="cart_mengment">
-                                      
                                         {formatCurrency(item.price)}
-                                       
                                         <div className="btn_containar">
-                                            
                                             <button onClick={() => props.addAmount(item)} className  = "Btn" > + </button>
                                             <div className = "ItemCounte"> {item.count}</div>
-                                            <button onClick={() => props.subAmount(item, index)} className  = "Btn" > - </button>
+                                            <button onClick={item.count > 1 ? () => props.subAmount(item) : () => props.removeFromCart(item)} className  = "Btn" > - </button>
                                         </div>
-                                        <button className="cart_item_remove" onClick={() => props.removeFromCart(index)}>
+                                        <button className="cart_item_remove" onClick={() => props.removeFromCart(item)}>
                                             Remove
                                         </button>
                                     </div>
@@ -116,16 +105,16 @@ import { removeFromCart } from '../../../actions/cartActions';
              </div>
              )} 
             </div>
-            </div>
+        </div>
             
         )
     }
 
     export default connect((state) => ({
         cartItems: state.cart.cartItems,
-        }),
-        removeFromCart
-    )(Cart);
+     }),
+     { removeFromCart, addAmount, subAmount}
+     )(Cart);
     
 
     //render() {
