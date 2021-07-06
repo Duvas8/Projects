@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import  './Checkout.css';
-
+import { connect } from 'react-redux';
 import formatCurrency from '../../../util'
+import { Fade } from "react-awesome-reveal";
 
 
 
-export default class Checkout extends Component {
+class Checkout extends Component {
 
     constructor() {
         super();
@@ -37,7 +38,10 @@ export default class Checkout extends Component {
 
         const {cartItems} = this.props;
         return (
+            <div className="checkout_background">
+            <Fade  cascade duration="750">     
             <div className="checkout_container">
+            <Fade  direction="up" cascade duration="750">
                 <div className="checkout_items_container">
                     <div className="checkout_items_info">
                         <div>Name</div>
@@ -116,11 +120,17 @@ export default class Checkout extends Component {
                         </li>
                     </ul>
                 </form>
-                
+                </Fade>
             </div>
+            </Fade>
+        </div>
         )
     }
 }
 
-
+export default connect((state) => ({
+    cartItems: state.cart.cartItems,
+ }),
+ { }
+ )(Checkout);
 // try miking the checkout be on the shop component to be make it like login in some what
