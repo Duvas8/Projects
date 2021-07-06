@@ -64,7 +64,6 @@ function ShopItems (props){
                                 <p>{ShopItems.info}</p>
                             </div>
                             <div >
-                                <p> Phone Number</p>
                                 <div className={classes.flourType_Container} >
                                     {ShopItems.flourType.map((x)=>(  
                                     <div>{" "}{x}</div>
