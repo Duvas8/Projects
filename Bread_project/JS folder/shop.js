@@ -3,7 +3,6 @@ import React , {Component} from 'react'
 import Aux from '../../hoc/Aux.js'
 
 import ShopItems from './ShopItems/ShopItems.js';
-
 import Filter from './Filter/Filter';
 import Cart from './Cart/Cart';
 import Checkout from '../Shop/Checkout/Checkout'
@@ -15,11 +14,7 @@ class shop extends Component {
     
     constructor() {
         super();
-        this.state = {
-           
-        
-            cartItems: localStorage.getItem("cartItems")? JSON.parse(localStorage.getItem("cartItems")):[],
-           
+        this.state = {  
             name: "",
             phoneNumber:"",
             peckupPoint:"",
@@ -41,70 +36,12 @@ class shop extends Component {
     }
 // make the cart component visable
     openCart = () => {
-        this.setState({openCartStatus:!this.state.openCartStatus})
-        console.log();
+        this.setState({openCartStatus:!this.state.openCartStatus});
     }
-// function that Remove item from cart    
-    removeFromCart = (index) => { 
-        //take the index of the item as a parameter
-        const cartItems = [...this.state.cartItems];
-        // spred the array so react could save the state with out Chaingin it 
-        cartItems.splice(index, 1);
-        // uses splice to Remove the item with the index that was given
-        this.setState({cartItems:cartItems});
-        // now react can marge the state and Update  the state
-        localStorage.setItem("cartItems", JSON.stringify(cartItems)); 
-        // save the new deta of the state cart item to the local storage of the brwoser
-        };
-   
-//
-    addToCart = (shopItem) => {
-        const cartItems = this.state.cartItems.slice();
-        let alredyInCart = false;
-        cartItems.forEach((x) => {
-            if(x._id === shopItem._id){
-                x.count++;
-                alredyInCart = true;
-            }
-        })
-        if(!alredyInCart){
-            cartItems.push({...shopItem, count: 1})
-        }
-        this.setState({cartItems})
-        console.log(cartItems);
-        localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    };
+
+ 
     
-    addAmount = (shopItem) => {
-            const cartItems = this.state.cartItems;
-            cartItems.forEach((x) => {
-                if(x._id === shopItem._id){
-                    x.count++
-                }  
-            })
-            this.setState({cartItems})
-        };
-
-        subAmount = (shopItem, index) => {
-            const cartItems = [...this.state.cartItems];
-            cartItems.forEach((x) => {
-                if(x._id === shopItem._id){
-                    if(x.count === 1){
-                   cartItems.splice(index, 1);
-                   this.setState({cartItems:cartItems});
-                   localStorage.setItem("cartItems", JSON.stringify(cartItems));
-            }else{
-                x.count-- 
-            }
-                   
-                } 
-                
-            }) 
-            
-            
-            this.setState({cartItems})
-        };
-
+  
    
 
     
@@ -121,15 +58,11 @@ class shop extends Component {
              />
               <ShopItems
            
-            addToCart = {this.addToCart}
+           
             openCart = {this.openCart}
             /> 
             </div>
             ) : ( <div> <Cart 
-             cartItems={this.state.cartItems} 
-             removeFromCart={this.removeFromCart} 
-             addAmount = {this.addAmount}
-             subAmount = {this.subAmount}
              showCheckout = {this.showCheckout}
              openCart = {this.openCart}
              />
@@ -137,7 +70,7 @@ class shop extends Component {
              )}
             {this.state.showCheckout && ( 
                <Checkout 
-               cartItems={this.state.cartItems}
+               
                showCheckout = {this.showCheckout}
                createOrder = {this.createOrder}
                />
@@ -211,4 +144,6 @@ count={this.state.shopItems.length}
              sortItems={this.sortItems}
 
  shopItems = {this.state.shopItems}
-    }; */
+    }; 
+    cartItems={this.state.cartItems}
+    */
