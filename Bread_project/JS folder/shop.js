@@ -25,26 +25,16 @@ class shop extends Component {
 
     
 
-    createOrder = (order) => {
-        alert("Need to save order for" + order.name)
-        };
     
 // show checkout when the user click on the "procide button"
     showCheckout = () => {
         this.setState({showCheckout:!this.state.showCheckout});
-        
     }
 // make the cart component visable
     openCart = () => {
         this.setState({openCartStatus:!this.state.openCartStatus});
     }
 
- 
-    
-  
-   
-
-    
 
 
     render() {
@@ -53,26 +43,21 @@ class shop extends Component {
      return( 
     <Provider store={store}>
          <Aux>
-             {!this.state.openCartStatus ? ( <div>
-                  <Filter 
-             />
+             {!this.state.openCartStatus ? ( <Aux>
+                  <Filter/>
               <ShopItems
-           
-           
             openCart = {this.openCart}
             /> 
-            </div>
-            ) : ( <div> <Cart 
+            </Aux>
+            ) : ( <Cart 
              showCheckout = {this.showCheckout}
              openCart = {this.openCart}
              />
-             </div>
+             
              )}
             {this.state.showCheckout && ( 
                <Checkout 
-               
                showCheckout = {this.showCheckout}
-               createOrder = {this.createOrder}
                />
                )}
              
