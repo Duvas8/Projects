@@ -1,33 +1,41 @@
 import React, {useState, useEffect} from 'react';
 import './AdminContent.css'
 import { DragDropContext,Droppable, Draggable } from 'react-beautiful-dnd'; 
-import {fetchOrder } from '../../actions/orderActions'
-import { connect} from 'react-redux';
+import {fetchOrder , deleteOrder} from '../../actions/orderActions'
+import { connect ,useDispatch} from 'react-redux';
+
 
 
 
 
 function AdminContent(props)  {
+    const dispatch = useDispatch();
+  
 
-
-   
     const [orders, setOrders] = useState([]);
-    
- 
+      
+
     useEffect(() => {
         props.fetchOrder(setOrders)
-       
-      
+        
     },[])
 
- console.log(orders);
+ 
     const columnsFromBackend = {
         newOrder: {
-          name: "Requested",
+            name: "Requested",
           items: orders,
-        },
-        r: {
-            name: "r",
+          },
+        inProgres: {
+            name: "In Progres",
+            items: [],
+          },
+        finished: {
+            name: "Finished",
+            items: [],
+          },
+        deliverd: {
+            name: "Deliverd",
             items: [],
           },
     } 
@@ -35,40 +43,78 @@ const [columns, setColumns] = useState(columnsFromBackend)
 
 
   
-  
+useEffect(() => {
+    setColumns(prevState => {
+        return {
+            ...prevState,
+            newOrder: {
+                ...prevState.newOrder,
+                name: "Requested",
+                items: orders
+            }
+        };
+    });
+   
+
+}, [orders]);
 
  
 
 
-   
-
-  
-
-
-const onDragEnd = ""
+ 
     
-   /* const testColumns = [...columns];
-     = (result , columns, setColumns) => {
+   
+   const onDragEnd  = (result , columns, setColumns) => {
         if(!result.destination) return;
         const {source, destination} = result;
+        if(source.droppableId !== destination.droppableId){
+        const sourceColumns = columns[source.droppableId];
+        const destColumns = columns[destination.droppableId];
+        const sourceItems = [...sourceColumns.items];
+        const destItems = [...destColumns.items];
+        const [removed] = sourceItems.splice(source.index, 1);
+        destItems.splice(destination.index, 0, removed);
+        setColumns({
+                ...columns,
+                [source.droppableId]: {
+                    ...sourceColumns,
+                    items: sourceItems
+                },
+                [destination.droppableId]: {
+                    ...destColumns,
+                    items:destItems
+                }
+            })
+        } else {
         const column = columns[source.droppableId];
         const copiedItems = [...column.items]
-        
-        const removed = copiedItems.splice(source.index, 1);
+        const [removed] = copiedItems.splice(source.index, 1);
         copiedItems.splice(destination.index, 0, removed);
-        setColumns({
-            ...columns,
-            [source.droppableId]: {
-                ...column,
-                items: copiedItems
-            }
-        });
+            setColumns({
+                ...columns,
+                [source.droppableId]: {
+                    ...column,
+                    items: copiedItems
+                }
+            });}
+       
         
         console.log(result)
-      }*/
+      }
    
   
 console.log(columns);
+
+// take the id of the itme/object you want to delete
+const deleteItem = (item, result , columns, setColumns) => {
+    const itemId = item._id
+    console.log(itemId);
+// use the dispatch you declared earlier with the function you import from Actions
+    dispatch(deleteOrder(itemId));
+   
+    props.fetchOrder(setOrders)
+     onDragEnd(result , columns, setColumns)
+};
 
 
     return(
@@ -76,8 +122,12 @@ console.log(columns);
         <div className="adminPageContainer"> 
         
              <DragDropContext  onDragEnd={result => onDragEnd(result, columns, setColumns)}>
-                {Object.entries(columns).map(([_id, columns]) => {
-                    return( <Droppable droppableId={_id} key={_id}>
+                {Object.entries(columns).map(([_id, column]) => {
+                    return(
+                    <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                        <h2>{column.name}</h2>
+                        <div style={{margin: 8 }}>
+                        <Droppable droppableId={_id} key={_id}>
                         {(provided , snapshot) => {
                            return(
                                <div 
@@ -91,9 +141,9 @@ console.log(columns);
                                   
                                   
                                }}>
-                                    {columns.items.map((items, index) => {
+                                    {column.items.map((item, index) => {
                                         return(
-                                            <Draggable  key={orders._id} draggableId={orders._id} index={index}>
+                                            <Draggable draggableId={item._id} key={item._id}  index={index}>
                                                 {(provided, snapshot) => {
                                                     return(
                                                         <div 
@@ -112,18 +162,19 @@ console.log(columns);
                                                             ...provided.draggableProps.style
                                                             }}
                                                         >
-                                                              <div>Order: {orders._id}</div>
-                                                              <div>Name: {" "}{orders.name}</div>
-                                                              <div>Phone Number:{" "}{orders.phoneNumber}</div>
-                                                              <div>Peckup Point:{" "}{orders.peckupPoint}</div>
-                                                              <div>Date: {" "}{orders.createdAt}</div>
-                                                              <div>Total:{" "}{orders.total}</div>
-                                                              <div>Cart Items:{orders.cartItems.map((x) => (
+                                                              <div>Order: {item._id}</div>
+                                                              <div>Name: {" "}{item.name}</div>
+                                                              <div>Phone Number:{" "}{item.phoneNumber}</div>
+                                                              <div>Peckup Point:{" "}{item.peckupPoint}</div>
+                                                              <div>Date: {" "}{item.createdAt}</div>
+                                                              <div>Total:{" "}{item.total}</div>
+                                                              <div>Cart Items:{item.cartItems.map((x) => (
                                                                 <div>
                                                                 {x.count} {" x "} {x.name}
                                                                 </div>
                                                                 ))}
                                                             </div>
+                                                            <button onClick={(result) => deleteItem(item, result , columns, setColumns)}> delete </button>
                                                         </div>
                                                     )
                                                 }}
@@ -134,7 +185,10 @@ console.log(columns);
                                     {provided.placeholder}
                                </div>
                            )}}
-                   </Droppable>)
+                   </Droppable>
+                   </div>
+                         
+                   </div>)
                    
                 })}
             </DragDropContext>
@@ -149,264 +203,11 @@ console.log(columns);
 export default connect(
     (state) => ({
          orders: state.order.orders,
-         cartItems: state.cart.cartItems,
+        cartItems: state.cart.cartItems,
+
     }), 
 {
-    fetchOrder
+    fetchOrder, deleteOrder
 })
 (AdminContent);
 
-/*
-<div>
-                                {cartItems.map((x) => (
-                                <div>
-                                {x.count} {" x "} {x.name}
-                                </div>
-                                ))}
-                            </div>
-const itemsFromBackend = [
-    {_id: "a", content: "try"},
-];
-const columnsFromBackend = {
-    newOrder: {
-      name: "Requested",
-      items: itemsFromBackend,
-    },
-} 
-
-  const onDragEnd = (result , columns, setColumns) => {
-        if(!result.destination) return;
-        const {source, destination} = result;
-        const column = columns[source.droppableId];
-        const copiedItems = [...column.items]
-        console.log(columns)
-        const removed = copiedItems.splice(source.index, 1);
-        copiedItems.splice(destination.index, 0, removed);
-        setColumns({
-            ...columns,
-            [source.droppableId]: {
-                ...column,
-                items: copiedItems
-            }
-        });
-        
-        console.log(result)
-      }
-
-
-{!orders ? ( 
-         <div>loding </div>   
-        ) : ( 
-        <ul className="orderList">
-            
-            {orders.map((order, index) =>  (  
-
-           <li className="orderStyle" key={index}>
-            <div>Name:</div>
-              <div>{order.name} </div>
-      
-              <div>Phone Number:</div>
-             <div>{order.phoneNumber} </div>
-      
-             <div>Peckup Point:</div>
-             <div>{order.peckupPoint} </div>
-                
-             <div>Date:</div>
-            <div>{order.createdAt} </div>
-       
-       <div>Cart Items:</div>
-      
-       
-           
-       </li>
-            )) }</ul>
-       
-   )}
-
-<h1>admin</h1>
-            <DragDropContext onDragEnd={result => console.log(result)}>
-            {Object.entries(columns).map(([_id, column]) => {
-                return(
-                    <Droppable droppableId={_id} key={_id}>
-                        {(provided , snapshot) => {
-                            return(
-                                <div {...provided.droppableProps}
-                                ref={provided.innerRef}
-                                style={{
-                                    background: snapshot.isDraggingOver ? "lightblue" : "lightgrey",
-                                    padding: 4,
-                                    width: 250,
-                                    minHeight: 500,
-                                }}>
-                                    
-                                    {column.orders.map((newOrder, index) => {
-                                        return(
-                                            <Draggable key={newOrder._id} draggableId={newOrder._id} index={index}>
-                                                {(provided, snapshot) => {
-                                                    return(
-                                                        <div 
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                        style={{
-                                                            userSelect: 'none',
-                                                            padding: '16px',
-                                                            margin: '0 0 8px 0',
-                                                            minHeigth: ' 50px',
-                                                            backgroundColor: snapshot.isDragging ? '#263B4A' : '#456C86',
-                                                            color: 'white',
-                                                            ...provided.draggableProps.style
-                                                            }}
-                                                        >
-                                                            {newOrder.connect}
-                                                        </div>
-                                                    )
-                                                }}
-
-                                            </Draggable>
-                                        )
-                                    })}
-                                </div>
-                            )
-                        }}
-                    </Droppable>
-                )
-            })}
-            </DragDropContext>
- <h1>admin</h1>
-            <DragDropContext onDragEnd={result => console.log(result)}>
-            {Object.entries(columns).map(([_id, column]) => {
-                return(
-                    <Droppable droppableId={_id} key={_id}>
-                        {(provided , snapshot) => {
-                            return(
-                                <div {...provided.droppableProps}
-                                ref={provided.innerRef}
-                                style={{
-                                    background: snapshot.isDraggingOver ? "lightblue" : "lightgrey",
-                                    padding: 4,
-                                    width: 250,
-                                    minHeight: 500,
-                                }}>
-                                    
-                                    {column.orders.map((newOrder, index) => {
-                                        return(
-                                            <Draggable key={newOrder._id} draggableId={newOrder._id} index={index}>
-                                                {(provided, snapshot) => {
-                                                    return(
-                                                        <div 
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                        style={{
-                                                            userSelect: 'none',
-                                                            padding: '16px',
-                                                            margin: '0 0 8px 0',
-                                                            minHeigth: ' 50px',
-                                                            backgroundColor: snapshot.isDragging ? '#263B4A' : '#456C86',
-                                                            color: 'white',
-                                                            ...provided.draggableProps.style
-                                                            }}
-                                                        >
-                                                            {newOrder.connect}
-                                                        </div>
-                                                    )
-                                                }}
-
-                                            </Draggable>
-                                        )
-                                    })}
-                                </div>
-                            )
-                        }}
-                    </Droppable>
-                )
-            })}
-            </DragDropContext>
-
-
-
-            function AdminContent(props)  {
-
-
-   
-    const [orders, setOrders] = useState([]);
-    
- useEffect(() => {
-     props.fetchOrder(setOrders)
- },[])
-   
-
-    return(
-        <div className="adminPageContainer">
-        {!orders ? ( 
-         <div>loding </div>   
-        ) : ( 
-        <ul className="orderList">
-            
-            {orders.map((order, index) =>  (  
-
-           <li className="orderStyle" key={index}>
-            <div>Name:</div>
-              <div>{order.name} </div>
-      
-              <div>Phone Number:</div>
-             <div>{order.phoneNumber} </div>
-      
-             <div>Peckup Point:</div>
-             <div>{order.peckupPoint} </div>
-                
-             <div>Date:</div>
-            <div>{order.createdAt} </div>
-       
-       <div>Cart Items:</div>
-      
-       
-           
-       </li>
-            )) }</ul>
-       
-   )}
-        
-       </div>
-    );
-}
-
-export default connect(
-    (state) => ({
-         orders: state.order.orders,
-    }), 
-{
-    fetchOrder
-})
-(AdminContent);
-
-
-{column.orders.map((order, index) => {
-                                        return(
-                                            <Draggable key={order._id} draggableId={order._id} index={index}>
-                                                {(provided, snapshot) => {
-                                                    return(
-                                                        <div 
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                        style={{
-                                                            userSelect: 'none',
-                                                            padding: '16px',
-                                                            margin: '0 0 8px 0',
-                                                            minHeigth: ' 50px',
-                                                            backgroundColor: snapshot.isDragging ? '#263B4A' : '#456C86',
-                                                            color: 'white',
-                                                            ...provided.draggableProps.style
-                                                            }}
-                                                        >
-                                                            {order.connect}
-                                                        </div>
-                                                    )
-                                                }}
-
-                                            </Draggable>
-                                        )
-                                    })}
- */
