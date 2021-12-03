@@ -1,4 +1,4 @@
-import { CREATE_ORDER, CLEAR_ORDER ,CLEAR_CART, FETCH_ORDER} from "../types";
+import { CREATE_ORDER, CLEAR_ORDER ,CLEAR_CART, FETCH_ORDER, DELETE_ORDER} from "../types";
 
 export const createOrder = (order) => (dispatch) => {
     fetch("/api/orders", {
@@ -32,9 +32,41 @@ export const fetchOrder = (setOrders) => (dispatch) => {
 }
 
 
+
+export const rdeleteOrder = (id) => (dispatch) => {
+    
+ fetch(`/api/orders/${id}`,
+  {
+    method: "DELETE",
+}
+  ).then((res) => res.json()
+   .then((data) => { 
+    dispatch({ type: DELETE_ORDER, payload: data});
+  })
+)}
+
+export const deleteOrder = (id) => (dispatch) =>  {
+    fetch(`/api/orders/${id}`, {
+      method: "DELETE",
+    })
+    .then(response => response)
+    .then(id => dispatch(
+      {
+        type: DELETE_ORDER,
+        payload: deleteOrder(id)
+       }
+      ))  
+    }
+  
+
+
+
+
   
    
-/*export const createOrder = (order) =>  (dispatch) => {
+/*
+
+export const createOrder = (order) =>  (dispatch) => {
     const newOrder = JSON.stringify(order); 
     const postOrder =  fetch("/api/order", {
         method: "POST",
