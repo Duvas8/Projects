@@ -1,4 +1,4 @@
-import { CREATE_ORDER, CLEAR_ORDER ,CLEAR_CART, FETCH_ORDER, DELETE_ORDER} from "../types";
+import { CREATE_ORDER, CLEAR_ORDER ,CLEAR_CART, FETCH_ORDER, DELETE_ORDER, FETCH_COLUMNS} from "../types";
 
 export const createOrder = (order) => (dispatch) => {
     fetch("/api/orders", {
@@ -24,26 +24,23 @@ export const clearOrder = () => (dispatch) => {
 }
 
 export const fetchOrder = (setOrders) => (dispatch) => {
-  fetch("/api/orders")
+    fetch("/api/orders")
     .then((res) => res.json())
     .then((data) => { setOrders(data)
       dispatch({ type: FETCH_ORDER, payload: data });
     });
 }
 
-
-
-export const rdeleteOrder = (id) => (dispatch) => {
+export const fetchColumns = (setColumns) => (dispatch) => {
+  fetch("/api/columns")
+  .then((res) => res.json())
+  .then((data) => { setColumns(data);
+    dispatch({ type: FETCH_COLUMNS, payload: data })
     
- fetch(`/api/orders/${id}`,
-  {
-    method: "DELETE",
+  });
 }
-  ).then((res) => res.json()
-   .then((data) => { 
-    dispatch({ type: DELETE_ORDER, payload: data});
-  })
-)}
+
+
 
 export const deleteOrder = (id) => (dispatch) =>  {
     fetch(`/api/orders/${id}`, {
@@ -58,30 +55,3 @@ export const deleteOrder = (id) => (dispatch) =>  {
       ))  
     }
   
-
-
-
-
-  
-   
-/*
-
-export const createOrder = (order) =>  (dispatch) => {
-    const newOrder = JSON.stringify(order); 
-    const postOrder =  fetch("/api/order", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-            
-        },
-        body: newOrder,
-    })
-    dispatch({
-        type: CREATE_ORDER,
-        payload: postOrder,
-    });
-    localStorage.clear("cartItems");
-    dispatch({
-        type:CLEAR_CART ,
-    });
-};*/ 
