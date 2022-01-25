@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, getState} from 'react';
 import './AdminContent.css'
 import { DragDropContext,Droppable, Draggable } from 'react-beautiful-dnd'; 
-import {fetchOrder , deleteOrder} from '../../actions/orderActions'
+import {fetchOrder , deleteOrder, fetchColumns} from '../../actions/orderActions'
 import { connect ,useDispatch} from 'react-redux';
 
 
@@ -11,7 +11,6 @@ import { connect ,useDispatch} from 'react-redux';
 function AdminContent(props)  {
     const dispatch = useDispatch();
   
-
     const [orders, setOrders] = useState([]);
       
 
@@ -22,44 +21,39 @@ function AdminContent(props)  {
 
  
     const columnsFromBackend = {
-        newOrder: {
+        
+        1: {
+            columnNumber: 1,
             name: "Requested",
           items: orders,
           },
-        inProgres: {
+        
+          2: {
+            columnNumber: 2,
             name: "In Progres",
             items: [],
           },
-        finished: {
+          3: {
+            columnNumber: 3,
             name: "Finished",
             items: [],
           },
-        deliverd: {
+          4: {
+            columnNumber: 4,
             name: "Deliverd",
             items: [],
           },
     } 
-const [columns, setColumns] = useState(columnsFromBackend)
-
+const [columns, setColumns] = useState([])
+console.log(columns);
 
   
-useEffect(() => {
-    setColumns(prevState => {
-        return {
-            ...prevState,
-            newOrder: {
-                ...prevState.newOrder,
-                name: "Requested",
-                items: orders
-            }
-        };
-    });
+
+    useEffect(() => {
+        setColumns(columnsFromBackend);
+       
+    }, [orders, setColumns]);;
    
-
-}, [orders]);
-
- 
-
 
  
     
@@ -68,12 +62,14 @@ useEffect(() => {
         if(!result.destination) return;
         const {source, destination} = result;
         if(source.droppableId !== destination.droppableId){
+           
         const sourceColumns = columns[source.droppableId];
         const destColumns = columns[destination.droppableId];
         const sourceItems = [...sourceColumns.items];
         const destItems = [...destColumns.items];
         const [removed] = sourceItems.splice(source.index, 1);
         destItems.splice(destination.index, 0, removed);
+        
         setColumns({
                 ...columns,
                 [source.droppableId]: {
@@ -106,15 +102,35 @@ useEffect(() => {
 console.log(columns);
 
 // take the id of the itme/object you want to delete
-const deleteItem = (item, result , columns, setColumns) => {
+const deleteItem = (item, columns, column, setColumns, index) => {
+  
     const itemId = item._id
-    console.log(itemId);
+    const columnsArray = columns
+    const copyColumns = [...column.items]
+    const columnNumber = column.columnNumber
+    console.log(columnNumber);
+    copyColumns.splice(index, 1);
+   console.log(columnsArray)
+   setColumns( prevState => {
+       return{
+           ...prevState,
+        ...columns,
+        [columnNumber]: {    
+         columnNumber: columnNumber,   
+         name: column.name,
+         items:copyColumns}
+ 
+       }
+           
+       })
+    ;
+  
 // use the dispatch you declared earlier with the function you import from Actions
     dispatch(deleteOrder(itemId));
    
-    props.fetchOrder(setOrders)
-     onDragEnd(result , columns, setColumns)
+   
 };
+
 
 
     return(
@@ -174,7 +190,7 @@ const deleteItem = (item, result , columns, setColumns) => {
                                                                 </div>
                                                                 ))}
                                                             </div>
-                                                            <button onClick={(result) => deleteItem(item, result , columns, setColumns)}> delete </button>
+                                                            <button onClick={()=>deleteItem(item, columns, column, setColumns , index)}> delete </button>
                                                         </div>
                                                     )
                                                 }}
@@ -202,12 +218,14 @@ const deleteItem = (item, result , columns, setColumns) => {
 
 export default connect(
     (state) => ({
+       
          orders: state.order.orders,
         cartItems: state.cart.cartItems,
 
+
     }), 
 {
-    fetchOrder, deleteOrder
+    fetchOrder, deleteOrder, fetchColumns
 })
 (AdminContent);
 
